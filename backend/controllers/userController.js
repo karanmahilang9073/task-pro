@@ -1,6 +1,7 @@
 import { asynchandler } from "../middleware/asynchandler.js";
 import bcrypt from 'bcrypt'
 import User from '../models/User.js'
+import JWT from 'jsonwebtoken'
 
 export const register = asynchandler(async (req, res, next) => {
     const {name, email, password} = req.body 
@@ -25,3 +26,39 @@ export const register = asynchandler(async (req, res, next) => {
     res.status(200).json({success : true, message : 'user created successfully', user})
 })
 
+export const login = asynchandler(async(req, res, next) => {
+    const {email, password} = req.body
+    if(!email || !password){
+        const error = new Error('email and password required')
+        error.statusCode = 400
+        throw error
+    }
+
+    const user = await  User.findOne({email})
+    if(!user){
+        const error = new Error('invalid email or password')
+        error.statusCode = 401
+        throw error
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password)
+    if(!isMatch){
+        const error = new Error('password do not match')
+        error.statusCode = 401
+        throw error
+    }
+
+    const token = JWT.sign(
+        {id : user._id},
+        process.env.JWT_SECRET,
+        {expiresIn : '10d'}
+    )
+
+    res.status(200).json({success : true, message : 'user logged in successfully', 
+        user : {
+            id : user._id,
+            name : user.name,
+            email : user.email
+        }
+    })
+})
