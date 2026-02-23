@@ -1,6 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import connectDB from './config/database.js'
+import userRouter from './routes/userRoutes.js'
 
 const app = express()
 dotenv.config()
@@ -13,6 +14,9 @@ const PORT = process.env.PORT
 app.get('/', (req, res) =>  {
     res.send('backend working fine')
 })
+
+//routes
+app.use('/api/auth', userRouter)
 
 //database call
 connectDB()
