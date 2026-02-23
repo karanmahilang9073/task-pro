@@ -54,7 +54,7 @@ export const login = asynchandler(async(req, res, next) => {
         {expiresIn : '10d'}
     )
 
-    res.status(200).json({success : true, message : 'user logged in successfully', 
+    res.status(200).json({success : true, token,  message : 'user logged in successfully', 
         user : {
             id : user._id,
             name : user.name,

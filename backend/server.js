@@ -2,6 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import connectDB from './config/database.js'
 import userRouter from './routes/userRoutes.js'
+import taskRouter from './routes/taskRoutes.js'
 
 const app = express()
 dotenv.config()
@@ -17,6 +18,7 @@ app.get('/', (req, res) =>  {
 
 //routes
 app.use('/api/auth', userRouter)
+app.use('/api/tasks', taskRouter)
 
 //database call
 connectDB()
