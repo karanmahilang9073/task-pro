@@ -20,7 +20,7 @@ export const createTask = asynchandler(async(req, res, next) => {
             throw error
         }
     }
-    const task = new Task({title, description,status, deadline, assignedTo})
+    const task = new Task({title, description,status, deadline, assignedTo, createdBy : req.userId})
     await task.save()
     res.status(201).json({success : true, message : 'task created successfully',
         task : {
