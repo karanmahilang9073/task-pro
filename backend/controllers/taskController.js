@@ -29,3 +29,7 @@ export const createTask = asynchandler(async(req, res, next) => {
         }
     })
 })
+
+export const getAllTasks = asynchandler(async(req, res, next) => {
+    
+})
