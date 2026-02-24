@@ -85,3 +85,24 @@ export const updateTask = asynchandler(async(req, res) => {
     res.status(200).json({success : true, message : "task updated successfully", task})
 
 })
+
+export const deleteTask = asynchandler(async(req, res) => {
+    const taskId = req.params.id
+    const userId = req.userId
+
+    const task = await Task.findById(taskId)
+    if(!task){
+        const error = new Error('task not found')
+        error.statusCode = 404
+        throw error
+    }
+    if(task.createdBy.toString() !== userId){
+        const error = new Error('unAuthorized')
+        error.statusCode = 403
+        throw error
+    }
+    await Task.findByIdAndDelete(taskId)
+
+    res.status(200).json({success : true, message : "task deleted successfully"})
+
+})
