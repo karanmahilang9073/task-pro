@@ -39,7 +39,7 @@ export const getAllTasks = asynchandler(async(req, res, next) => {
         throw error
     }
 
-    res.status(200).json({success : true, count : tasks.length, tasks})
+    res.status(200).json({success : true, message : 'all task fetched successfully', count : tasks.length, tasks})
 })
 
 export const getTask = asynchandler(async(req, res) => {
@@ -56,5 +56,32 @@ export const getTask = asynchandler(async(req, res) => {
         throw error
     }
 
-    res.status(200).json({success : true, task})
+    res.status(200).json({success : true, message : 'task get successfully',  task})
+})
+
+export const updateTask = asynchandler(async(req, res) => {
+    const taskId = req.params.id
+    const userId = req.userId
+    const {title, description, deadline, assignedTo} = req.body
+    const task = await Task.findById(taskId)
+    if(!task){
+        const error = new Error('task not found')
+        error.statusCode = 404
+        throw error
+    }
+    if(task.createdBy.toString() !== userId){
+        const error = new Error('unAuthprized')
+        error.statusCode = 403
+        throw error
+    }
+    
+    if(title !== undefined) task.title = title
+    if(description !== undefined) task.description = description
+    if(deadline !== undefined) task.deadline = deadline
+    if(assignedTo !== undefined) task.assignedTo = assignedTo
+
+    await task.save()
+
+    res.status(200).json({success : true, message : "task updated successfully", task})
+
 })
