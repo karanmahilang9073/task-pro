@@ -62,3 +62,56 @@ export const login = asynchandler(async(req, res, next) => {
         }
     })
 })
+
+export const getUser = asynchandler(async(req, res) => {
+    const userId = req.userId
+    const user = await User.findById(userId).select("-password")
+    if(!user){
+        const error = new Error('user not found')
+        error.statusCode = 404
+        throw error
+    }
+
+    res.status(200).json({success : true, message : "user fetched successfully", user})
+})
+
+export const updateUser = asynchandler(async(req, res)=> {
+    const userId = req.userId
+    const {name, email, password} = req.body
+    const user = await User.findById(userId)
+    if(!user){
+        const error = new Error('user not found')
+        error.statusCode = 404
+        throw error
+    }
+    if(name) user.name = name
+    if(email) user.email = email
+    if(password){
+        user.password = await bcrypt.hash(password, 10)
+    }
+    await user.save()
+
+    res.status(200).json({success : true, message : 'user updated successfully', 
+        user : {
+            _id : user._id,
+            name : user.name,
+            email : user.email,
+            role : user.role,
+            status : user.status
+        }
+    })
+})
+
+export const deleteUser = asynchandler(async(req, res) => {
+    const userId = req.userId
+    const user = await  User.findById(userId)
+    if(!user){
+        const error = new Error('user not found')
+        error.statusCode = 404
+        throw error
+    }
+
+    await User.findByIdAndDelete(userId)
+
+    res.status(200).json({success : true, message : 'user deleted successfully'})
+})
