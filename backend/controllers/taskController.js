@@ -42,3 +42,19 @@ export const getAllTasks = asynchandler(async(req, res, next) => {
     res.status(200).json({success : true, count : tasks.length, tasks})
 })
 
+export const getTask = asynchandler(async(req, res) => {
+    const taskId = req.params.id
+    const task = await Task.findById(taskId)
+    if(!task){
+        const error = new Error('task not found')
+        error.statusCode = 404
+        throw error
+    }
+    if(task.createdBy.toString() !== req.userId){
+        const error = new Error('unAuthorized error')
+        error.statusCode = 403
+        throw error
+    }
+
+    res.status(200).json({success : true, task})
+})
