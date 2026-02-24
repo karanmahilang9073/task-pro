@@ -31,5 +31,14 @@ export const createTask = asynchandler(async(req, res, next) => {
 })
 
 export const getAllTasks = asynchandler(async(req, res, next) => {
-    
+    const userId = req.userId
+    const tasks = await Task.find({createdBy : userId})
+    if(tasks.length === 0){
+        const error = new Error('task not found')
+        error.statusCode = 404
+        throw error
+    }
+
+    res.status(200).json({success : true, count : tasks.length, tasks})
 })
+
