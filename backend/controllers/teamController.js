@@ -125,3 +125,32 @@ export const addMember = asynchandler(async(req, res) => {
 
     res.status(200).json({success : true, message : 'new member added successfully', team})
 })
+
+export const removeMember = asynchandler(async(req, res) => {
+    const teamId = req.params.id
+    const userId = req.userId
+    const {memberId} = req.body
+
+    const team = await Team.findById(teamId)
+    if(!team){
+        const error = new Error('team not found')
+        error.statusCode = 404
+        throw error
+    }
+    if(team.createdBy.toString() !== userId){
+        const error = new Error('not authorized to remove members')
+        error.statusCode = 403
+        throw error
+    }
+    if(!team.members.includes(memberId)){
+        const error = new Error('member not found in the team')
+        error.statusCode = 400
+        throw error
+    }
+
+    team.members = team.members.filter(m => m.toString() !== memberId)
+
+    await team.save()
+
+    res.status(200).json({success : true, message : 'member removed successfully ', team})
+})
