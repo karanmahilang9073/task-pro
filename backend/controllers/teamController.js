@@ -20,3 +20,15 @@ export const createTeam = asynchandler(async(req, res) => {
     await newTeam.save()
     res.status(200).json({success : true, message : 'new team created successfully', newTeam})
 })
+
+export const getAllTeams = asynchandler(async(req, res) => {
+    const userId = req.userId
+    const team = await Team.find({createdBy : userId})
+    if(!team || team.length == 0){
+        const error = new Error('team not found')
+        error.statusCode = 404
+        throw error
+    }
+
+    res.status(200).json({success : true, count : team.length, teams : team})
+})
