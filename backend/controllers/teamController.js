@@ -51,3 +51,28 @@ export const getTeam = asynchandler(async(req, res) => {
 
     res.status(200).json({success : true, message : 'team fetched successfully', team})
 })
+
+export const updateTeam = asynchandler(async(req, res) => {
+    const teamId = req.params.id
+    const userId = req.userId
+    const {name, description} = req.body
+
+    const team = await Team.findById(teamId)
+    if(!team){
+        const error = new Error('team not found')
+        error.statusCode = 404
+        throw error
+    }
+    if(team.createdBy.toString() !== userId){
+        const error = new Error('not authorized to update team')
+        error.statusCode = 403
+        throw error
+    }
+    if(name) team.name = name
+    if(description) team.description = description
+
+    await team.save()
+
+    res.status(200).json({success : true, message : 'team updated successfully', team})
+})
+
