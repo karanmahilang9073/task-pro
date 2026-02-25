@@ -32,3 +32,22 @@ export const getAllTeams = asynchandler(async(req, res) => {
 
     res.status(200).json({success : true, count : team.length, teams : team})
 })
+
+export const getTeam = asynchandler(async(req, res) => {
+    const teamId = req.params.id 
+    const userId = req.userId
+
+    const team = await Team.findById(teamId)
+    if(!team){
+        const error = new Error('team not found')
+        error.statusCode = 404
+        throw error
+    }
+    if(team.createdBy.toString() !== userId){
+        const error = new Error('not authorized to access team')
+        error.statusCode = 403
+        throw error
+    }
+
+    res.status(200).json({success : true, message : 'team fetched successfully', team})
+})
