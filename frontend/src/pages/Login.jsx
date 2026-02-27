@@ -17,7 +17,9 @@ function Login() {
         setLoading(true)
         setError("")
         try {
-            await axios.post("http://localhost:8000/api/auth/login", formdata)
+            const res = await axios.post("http://localhost:8000/api/auth/login", formdata)
+            const token = res.data.token
+            localStorage.setItem("token", token)
             navigate('/dashboard')
         } catch (error) {
             setError(error.response?.data?.message || 'login failed')
