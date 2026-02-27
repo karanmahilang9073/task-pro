@@ -38,7 +38,7 @@ function Register() {
             </div>
 
             {/* if something error  */}
-            {error && <div className='hidden bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-2'>something went wrong, please try again</div> }
+            {error && <div className=' bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-2'>something went wrong, please try again</div> }
 
             <div >
                 <label className='block text-sm font-medium text-gray-700 mb-1'>name</label>
