@@ -1,6 +1,7 @@
-import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import {AuthContext} from '../context/authContext'
+import {authApi} from '../api/api'
 
 function Login() {
     const [formdata, setFormdata] = useState({
@@ -10,6 +11,7 @@ function Login() {
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
+    const {login} = useContext(AuthContext)
 
     const handleSubmit = async(e) => {
         e.preventDefault()
@@ -17,10 +19,9 @@ function Login() {
         setLoading(true)
         setError("")
         try {
-            const res = await axios.post("http://localhost:8000/api/auth/login", formdata)
-            const token = res.data.token
-            localStorage.setItem("token", token)
-            navigate('/dashboard')
+            const res = await authApi.login(formdata.email, formdata.password)
+            login(res.data.user, res.data.token)
+            navigate('/')
         } catch (error) {
             setError(error.response?.data?.message || 'login failed')
         } finally {
