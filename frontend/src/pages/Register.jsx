@@ -1,6 +1,6 @@
 import React, {useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { AuthContext } from '../context/authContext'
+// import { AuthContext } from '../context/authContext.sx'
 import { authApi } from '../api/api'
 
 
@@ -13,6 +13,8 @@ function Register() {
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
+
+    // const {register} = useContext(AuthContext)
 
     const handleSubmit = async(e) => {
         e.preventDefault()
