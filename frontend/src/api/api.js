@@ -29,7 +29,15 @@ const api = {
 export const authApi = {
     register : (name, email, password) => api.post('/auth/register', {name, email, password}),
     login : (email, password) => api.post('/auth/login', {email, password}),
-    update : (name, email, passowrd) => api.put('/auth/profile', {name, email, passowrd})
+}
+
+export const taskApi = {
+    createTask : (title, description, deadline, assignedTo) => api.post('/tasks/create-task', {title, description, deadline, assignedTo}),
+    getTask : (taskId) => api.get(`/tasks/${taskId}`),
+    getAllTasks : () => api.get(`/tasks`),
+    updateTask : (title, description, deadline, assignedTo, taskId) => api.put(`/tasks/${taskId}`, {title, description, deadline, assignedTo}),
+    deleteTask : (taskId) => api.delete(`/tasks/${taskId}`)
+
 }
 
 
