@@ -5,7 +5,7 @@ const userSchema =  mongoose.Schema({
     email : {type : String, unique : true, required : true},
     password : {type : String, minlength : 6},
     role : {type : String, enum:['admin', 'user'], default : 'user'},
-    status : {type : String, enum:['active', 'inactive']}
+    status : {type : String, enum:['active', 'inactive'], default : "active"}
 }, {timestamps : true})
 
 const User = new mongoose.model("User", userSchema)
