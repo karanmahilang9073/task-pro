@@ -6,6 +6,7 @@ import connectDB from './config/database.js'
 import userRouter from './routes/userRoutes.js'
 import taskRouter from './routes/taskRoutes.js'
 import teamRouter from './routes/teamRoutes.js'
+import notificationRouter from './routes/notificationRoutes.js'
 
 const app = express()
 dotenv.config()
@@ -26,6 +27,7 @@ app.get('/', (req, res) =>  {
 app.use('/api/auth', userRouter)
 app.use('/api/tasks', taskRouter)
 app.use('/api/teams', teamRouter)
+app.use('/api/notification', notificationRouter)
 
 //database call
 connectDB()
