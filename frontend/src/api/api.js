@@ -37,7 +37,16 @@ export const taskApi = {
     getAllTasks : () => api.get(`/tasks`),
     updateTask : (title, description, deadline, assignedTo, taskId) => api.put(`/tasks/${taskId}`, {title, description, deadline, assignedTo}),
     deleteTask : (taskId) => api.delete(`/tasks/${taskId}`)
+}
 
+export const teamApi = {
+    createTeam : (name, description) => api.post('/teams', {name, description}),
+    getAllTeams : () => api.get('/teams'),
+    getTeam : (teamId) => api.get( `/teams/${teamId}`),
+    updateTeam : (teamId, name, description) => api.put(`/teams/${teamId}`, {name, description}),
+    deleteTeam : (teamId) => api.delete(`/teams/${teamId}`),
+    addMembers : (teamId, memberId) => api.post(`/teams/${teamId}/add-member`, {memberId}),
+    removeMember : (teamId, memberId) => api.post(`/teams/${teamId}/delete-member`, {memberId})
 }
 
 
