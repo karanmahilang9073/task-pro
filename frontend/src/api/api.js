@@ -49,5 +49,11 @@ export const teamApi = {
     removeMember : (teamId, memberId) => api.post(`/teams/${teamId}/delete-member`, {memberId})
 }
 
+export const notificationApi = {
+    getAllNotification : () => api.get('/notification'),
+    getNotification : (notificationId) => api.get(`/notification/${notificationId}`),
+    deleteNotification : (notificationId) => api.delete(`/notification/${notificationId}`)
+}
+
 
 export default api
