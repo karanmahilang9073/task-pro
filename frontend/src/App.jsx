@@ -8,15 +8,12 @@ import { useContext } from 'react'
 
 
 function App() {
-
-  const {isloggedIn} = useContext(AuthContext)
-
-
+  const {isLoggedin} = useContext(AuthContext)
 
   return (
     <>
       <Routes>
-        <Route path='/' element={isloggedIn ? <Home/> : <Login/>} />
+        <Route path='/' element={isLoggedin ? <Home/> : <Login/>} />
         <Route path='/register' element={<Register/>} />
         <Route path='/login' element={<Login/>} />
       </Routes>
