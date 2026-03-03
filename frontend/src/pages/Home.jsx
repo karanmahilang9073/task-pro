@@ -15,6 +15,14 @@ function Home() {
         description : '',
         deadline : ''
     })
+    
+    //edit task states
+    const [editTaskId, setEditTaskId] = useState(null)
+    const [editFormData, setEditFormData] = useState({
+        title : '',
+        description : '',
+        deadline : ''
+    })
 
     const {isLoggedin, logout, user, token} = useContext(AuthContext)
     const navigate = useNavigate()
@@ -42,6 +50,7 @@ function Home() {
         navigate('/login')
     }
 
+    // create task
     const handleTask = async(e) => {
         e.preventDefault()
         try {
@@ -56,6 +65,7 @@ function Home() {
         }
     }
 
+    //delete task
     const deleteTask = async(taskId) => {
         try {
             await taskApi.deleteTask(taskId)
@@ -65,7 +75,29 @@ function Home() {
         } catch (error) {
             setError(error.response?.data?.message || 'failed to delete task')
         }
+    }
 
+    //edit task
+    const handleEditTask = async(task) => {
+        setEditTaskId(task._id)
+        setEditFormData({
+            title : task.title || '',
+            description : task.description || '',
+            deadline : task.deadline || ''
+        })
+    }
+
+    //update task
+    const handleUpdateTask = async(e) => {
+        try {
+            e.preventDefault()
+            await taskApi.updateTask(editFormData.title, editFormData.description, editFormData.deadline, null, editTaskId)
+            setEditFormData({title : '', description : '', deadline : ''})
+            await fetchTask()
+            setEditTaskId(null)
+        } catch (error) {
+            setError(error.response?.data?.message || 'failed to updated task')
+        }
     }
 
   return (
@@ -104,6 +136,27 @@ function Home() {
             <button type='submit' className='bg-blue-500'>ceate-task</button>
         </form>
 
+        {/* edit task  */}
+        {editTaskId !== null && 
+            <form onSubmit={handleUpdateTask}>
+            <div>
+                <label className='bg-amber-200'>title</label>
+                <input type="text" value={editFormData.title} onChange={(e) => setEditFormData({...editFormData, title : e.target.value})} placeholder='enter task title' />
+            </div>
+            <div>
+                <label className='bg-amber-200'>description</label>
+                <input type="text" value={editFormData.description} onChange={(e) => setEditFormData({...editFormData, description : e.target.value})} placeholder='please enter task description' />
+            </div>
+            <div>
+                <label className='bg-amber-200'>deadline</label>
+                <input type="date" value={editFormData.deadline} onChange={(e) => setEditFormData({...editFormData, deadline : e.target.value})} placeholder='please set task deadline' />
+            </div>
+            <button type='submit' className='bg-blue-500'>save task</button>
+            <button type='button' onClick={() => setEditTaskId(null)} className='bg-gray-500'>cancel</button>
+        </form>
+        }
+
+        {/* task card  */}
         <div className='grid gap-4'>
             {tasks.map((task) => (
                 <div key={task._id} className='bg-white p-4 rounded-lg shadow'>
@@ -111,6 +164,7 @@ function Home() {
                     <p className="text-gray-500">{task.description}</p>
                     <p className='text-gray-400'>{task.deadline}</p>
                     <button onClick={() => deleteTask(task._id)} className='bg-red-400 text-white'>delete task</button>
+                    <button onClick={() => handleEditTask(task)} className='bg-green-400 ml-1.5'>edit</button>
                 </div>
             ))}
         </div>
