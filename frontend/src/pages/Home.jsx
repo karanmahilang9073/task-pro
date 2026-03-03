@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../context/authContext.jsx'
 import { useNavigate } from 'react-router-dom'
 import { taskApi } from '../api/api'
@@ -9,21 +9,29 @@ function Home() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
 
+    //task states
+    const [formdata, setFormdata] = useState({
+        title : '',
+        description : '',
+        deadline : ''
+    })
+
     const {isLoggedin, logout, user, token} = useContext(AuthContext)
     const navigate = useNavigate()
 
-    useEffect(() => {
-        const fetchTask = async() => {
-            try {
-                setLoading(true)
-                const data = await taskApi.getAllTasks()
-                setTasks(data.tasks)
-            } catch (error) {
-                setError(error.response?.data?.message || 'failed to fetch task')
-            }finally {
-                setLoading(false)
-            }
+    const fetchTask = async() => {
+        try {
+            setLoading(true)
+            const data = await taskApi.getAllTasks()
+            setTasks(data.data.tasks)
+        } catch (error) {
+            setError(error.response?.data?.message || 'failed to fetch task')
+        }finally {
+            setLoading(false)
         }
+    }
+
+    useEffect(() => {
         if(isLoggedin){
             fetchTask()
         }
@@ -32,6 +40,32 @@ function Home() {
     const handleLogout = () => {
         logout()
         navigate('/login')
+    }
+
+    const handleTask = async(e) => {
+        e.preventDefault()
+        try {
+            await taskApi.createTask(formdata.title, formdata.description, formdata.deadline)
+            setFormdata({title : '', description : '', deadline : ''})
+            setError(null)
+            await fetchTask()
+        } catch (error) {
+            setError(error.response?.data?.message || 'failed to create task, try again later')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const deleteTask = async(taskId) => {
+        try {
+            await taskApi.deleteTask(taskId)
+            await fetchTask()
+            setError(null)
+            console.log('task deleted successfully', taskId)
+        } catch (error) {
+            setError(error.response?.data?.message || 'failed to delete task')
+        }
+
     }
 
   return (
@@ -53,15 +87,35 @@ function Home() {
             <p className="text-gray-500">no task available</p>
         )}
 
+         {/* create task  */}
+        <form onSubmit={handleTask}>
+            <div>
+                <label className='bg-amber-200'>title</label>
+                <input type="text" onChange={(e) => setFormdata({...formdata, title : e.target.value})} placeholder='enter task title' />
+            </div>
+            <div>
+                <label className='bg-amber-200'>description</label>
+                <input type="text" onChange={(e) => setFormdata({...formdata, description : e.target.value})} placeholder='please enter task description' />
+            </div>
+            <div>
+                <label className='bg-amber-200'>deadline</label>
+                <input type="date" onChange={(e) => setFormdata({...formdata, deadline : e.target.value})} placeholder='please set task deadline' />
+            </div>
+            <button type='submit' className='bg-blue-500'>ceate-task</button>
+        </form>
+
         <div className='grid gap-4'>
             {tasks.map((task) => (
                 <div key={task._id} className='bg-white p-4 rounded-lg shadow'>
                     <h2 className="font-semibold text-lg">{task.title}</h2>
                     <p className="text-gray-500">{task.description}</p>
+                    <p className='text-gray-400'>{task.deadline}</p>
+                    <button onClick={() => deleteTask(task._id)} className='bg-red-400 text-white'>delete task</button>
                 </div>
             ))}
         </div>
-
+        
+       
     </div>
   )
 }
