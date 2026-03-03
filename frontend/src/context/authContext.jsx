@@ -17,7 +17,7 @@ export const AuthProvider = ({children}) => {
         }
     }, [])
 
-     const register = (userData, userToken) => {
+    const register = (userData, userToken) => {
         setUser(userData)
         setToken(userToken)
         setIsLoggedin(true)
@@ -31,7 +31,6 @@ export const AuthProvider = ({children}) => {
         setIsLoggedin(true)
         localStorage.setItem('token', userToken)
         localStorage.setItem('user', JSON.stringify(userData))
-
     }
     
     const logout = () => {
