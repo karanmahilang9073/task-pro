@@ -4,6 +4,7 @@ import Login from './pages/Login'
 import Home from './pages/Home'
 import { AuthContext } from './context/authContext'
 import { useContext } from 'react'
+import Navbar from './components/Navbar'
 
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
 
   return (
     <>
+      <Navbar />
       <Routes>
         <Route path='/' element={isLoggedin ? <Home/> : <Login/>} />
         <Route path='/register' element={<Register/>} />
