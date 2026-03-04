@@ -2,6 +2,18 @@ import { asynchandler } from "../middleware/asynchandler.js";
 import Notification from "../models/Notification.js";
 
 
+export const createNotification = asynchandler(async(req, res) => {
+    const {recipient, type, taskId, message} = req.body
+    if(!recipient || !type || !taskId || !message) {
+        const error = new Error('all fields are required')
+        error.statusCode = 404
+        throw error
+    } 
+    const notification = new Notification({recipient, type, taskId, message})
+    await notification.save()
+    res.status(200).json({success : true, message : 'notification created successfully', notification})
+})
+
 export const getAllNotifications = asynchandler(async(req, res) => {
     const userId = req.userId;
     const notifications = await Notification.find({recipient : userId})
