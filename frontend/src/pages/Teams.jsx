@@ -12,6 +12,11 @@ function Teams() {
     name : '',
     description : ''
   })
+  const [editTeamId, setEditTeamId] = useState(null)
+  const [editFormdata, setEditFormdata] = useState({
+    name : '',
+    description : ''
+  })
 
   const {isLoggedin} = useContext(AuthContext)
 
@@ -42,6 +47,26 @@ function Teams() {
       fetchTeams()
     } catch (error) {
       setError(error.response?.data?.message || 'failed to create team')
+    }
+  }
+
+  const handleEditTeam = async(team) => {
+    setEditTeamId(team._id)
+    setEditFormdata({
+      name : team.name,
+      description : team.description
+    })
+  }
+
+  const handleUpdate = async(e) => {
+    try {
+      e.preventDefault()
+      await teamApi.updateTeam(editTeamId, editFormdata.name, editFormdata.description)
+      setEditFormdata({name : '', description : ''})
+      fetchTeams()
+      setEditTeamId(null)
+    } catch (error) {
+      setError(error.response?.data?.message || 'failed to update team')
     }
   }
 
@@ -94,6 +119,23 @@ function Teams() {
           </form>
         )}
 
+        {editTeamId !==  null && 
+        <form onSubmit={handleUpdate}>
+          <div className='flex flex-col'>
+            <label className='w-full max-w-md rounded-md ' >team</label>
+            <input type="text" value={editFormdata.name} onChange={(e) => setEditFormdata({...editFormdata, name : e.target.value})} placeholder='change team name' className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' />
+           </div>
+           <div className='flex flex-col'>
+            <label className='w-full max-w-md rounded-md ' >team</label>
+            <input type="text" value={editFormdata.description}  onChange={(e) => setEditFormdata({...editFormdata, description : e.target.value})} placeholder='change team description' className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' />
+           </div>
+           <div className="flex mt-2">
+            <button type='submit' className='bg-blue-500 text-white ml-1.5 rounded m-2'>save</button>
+            <button type='button' onClick={() => setEditTeamId(null)} className='bg-gray-500 text-white ml-1.5 rounded'>cancel</button>
+           </div>
+        </form>
+        }
+
         {/* teams list  */}
         <div className='mt-4 bg-gray-300'>
           {teams.map((team) => (
@@ -101,7 +143,7 @@ function Teams() {
                 <h2 className="font-semibold text-lg">{team.name}</h2>
                 <p className='text-gray-600 mt-2'>{team.description}</p>
                 <div className="flex gap-2 mt-4">
-                  <button className='bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition'>edit</button>
+                  <button onClick={() => handleEditTeam(team)} className='bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition'>edit</button>
                   <button onClick={() => handleDelete(team._id)} className='bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition'>delete</button>
                 </div>
               </div>
