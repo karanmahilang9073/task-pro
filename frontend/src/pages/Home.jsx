@@ -1,8 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../context/authContext.jsx'
-import { useNavigate } from 'react-router-dom'
 import { taskApi } from '../api/api'
-
 
 function Home() {
     const [tasks, setTasks] = useState([])
@@ -25,8 +23,7 @@ function Home() {
         deadline : ''
     })
 
-    const {isLoggedin, logout, user, token} = useContext(AuthContext)
-    const navigate = useNavigate()
+    const {isLoggedin , token} = useContext(AuthContext)
 
     const fetchTask = async() => {
         try {
@@ -45,11 +42,6 @@ function Home() {
             fetchTask()
         }
     }, [isLoggedin, token])
-
-    const handleLogout = () => {
-        logout()
-        navigate('/login')
-    }
 
     // create task
     const handleTask = async(e) => {
@@ -103,12 +95,6 @@ function Home() {
 
   return (
     <div className='min-h-screen bg-gray-300 p-6'>
-
-        {/* header  */}
-        <div className="flex justify-between items-center mb-6 bg-white p-4 rounded-lg shadow">
-            <h1 className='text-2xl font-semibold text-gray-800'>welcome, <span className="text-blue-600">{user?.name}</span></h1>
-            <button onClick={handleLogout} className='bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition font-medium'>logout</button>
-        </div>
 
         {/* loading  */}
         {loading && <p className='bg-blue-50 border  border-blue-200 text-blue-600 text-sm rounded-lg px-3 py-2 mb-4'>loading</p>}
