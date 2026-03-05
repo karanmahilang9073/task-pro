@@ -27,7 +27,7 @@ function Navbar() {
         </div>
         <div className="flex gap-2">
           <span>{user.name}</span>
-          <button onClick={handleLogout} className='bg-red-500 text-white rounded-lg'>logout</button>
+          <button onClick={handleLogout} className='bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition'>logout</button>
         </div>
       </nav>
     </div>

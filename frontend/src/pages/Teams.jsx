@@ -45,6 +45,16 @@ function Teams() {
     }
   }
 
+  const handleDelete = async(teamId) => {
+      try {
+        await teamApi.deleteTeam(teamId)
+        fetchTeams()
+      } catch (error) {
+        setError(error.response?.data?.message || 'failed to delete team')
+      }
+  }
+
+
 
   return (
     <div>
@@ -87,11 +97,16 @@ function Teams() {
         {/* teams list  */}
         <div className='mt-4 bg-gray-300'>
           {teams.map((team) => (
-              <div key={team._id} >
-                <div className="mb-3">{team.name}</div>
-                <div className='mb-3'>{team.description}</div>
+              <div key={team._id} className='bg-white p-6 rounded-lg hover:shadow-md transition m-5 ' >
+                <h2 className="font-semibold text-lg">{team.name}</h2>
+                <p className='text-gray-600 mt-2'>{team.description}</p>
+                <div className="flex gap-2 mt-4">
+                  <button className='bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition'>edit</button>
+                  <button onClick={() => handleDelete(team._id)} className='bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition'>delete</button>
+                </div>
               </div>
           ))}
+          
         </div>
     </div>
   )
