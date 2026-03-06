@@ -1,6 +1,9 @@
 import { asynchandler } from "../middleware/asynchandler.js";
+import Notification from "../models/Notification.js";
 import Task from "../models/Task.js";
 import User from "../models/User.js";
+import { sendEmail } from "../services/emailService.js";
+import { taskAssignmentTemplate } from "../utils/emailTemplates.js";
 
 
 export const createTask = asynchandler(async(req, res, next) => {
@@ -22,6 +25,21 @@ export const createTask = asynchandler(async(req, res, next) => {
     }
     const task = new Task({title, description,status, deadline, assignedTo, createdBy : req.userId})
     await task.save()
+
+    if(task.assignedTo){
+        const user = await User.findById(task.assignedTo)
+        if(user && user.email){
+            const emailHTML = taskAssignmentTemplate(task.title, task.description, task.deadline)
+            await sendEmail(user.email, 'new task assigned to you', emailHTML)
+            await Notification.create({
+                recipient : user._id,
+                type : 'taskAssignment',
+                taskId : task._id,
+                message : `you have been assigned a new task: ${task.title}`
+            })
+        }
+    }
+    
     res.status(201).json({success : true, message : 'task created successfully',
         task : {
             title : task.title,
@@ -82,6 +100,19 @@ export const updateTask = asynchandler(async(req, res) => {
 
     await task.save()
 
+    if(task.assignedTo){
+        const user = await User.findById(task.assignedTo)
+        if(user && user.email){
+            const emailHTML = taskAssignmentTemplate(task.title, task.description, task.deadline)
+            await sendEmail(user.email, 'task updated', emailHTML)
+            await Notification.create({
+                recipient : user._id,
+                type : 'taskAssignment',
+                taskId : task._id,
+                message : `your task has been updated`
+            })
+        }
+    }
     res.status(200).json({success : true, message : "task updated successfully", task})
 
 })
