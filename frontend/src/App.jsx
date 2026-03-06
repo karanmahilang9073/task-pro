@@ -6,6 +6,7 @@ import { AuthContext } from './context/authContext'
 import { useContext } from 'react'
 import Navbar from './components/Navbar'
 import Teams from './pages/Teams'
+import Notification from './pages/Notification'
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Route path='/register' element={<Register/>} />
         <Route path='/login' element={<Login/>} />
         <Route path='/teams' element={<Teams/>} />
+        <Route path='/notifications' element={<Notification/>} />
       </Routes>
     </>
   )
