@@ -23,7 +23,7 @@ export const createTeam = asynchandler(async(req, res) => {
 
 export const getAllTeams = asynchandler(async(req, res) => {
     const userId = req.userId
-    const team = await Team.find({createdBy : userId})
+    const team = await Team.find({createdBy : userId}).populate('members')
     if(!team || team.length == 0){
         const error = new Error('team not found')
         error.statusCode = 404
@@ -37,7 +37,7 @@ export const getTeam = asynchandler(async(req, res) => {
     const teamId = req.params.id 
     const userId = req.userId
 
-    const team = await Team.findById(teamId)
+    const team = await Team.findById(teamId).populate('members')
     if(!team){
         const error = new Error('team not found')
         error.statusCode = 404

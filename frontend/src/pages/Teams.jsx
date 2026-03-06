@@ -18,6 +18,9 @@ function Teams() {
     description : ''
   })
 
+  const [addMemberTeamId, setAddMemberTeamId] = useState(null)
+  const [newMemberId, setNewMemberId] = useState('')
+
   const {isLoggedin} = useContext(AuthContext)
 
   const fetchTeams = async() => {
@@ -77,6 +80,30 @@ function Teams() {
       } catch (error) {
         setError(error.response?.data?.message || 'failed to delete team')
       }
+  }
+
+  const handleAddMember = async(teamId) => {
+    try {
+      setError(null)
+      if(newMemberId == ''){
+        setError('member ID cannot be empty')
+        return
+      }
+      await teamApi.addMembers(teamId, newMemberId)
+      setNewMemberId('')
+      fetchTeams()
+    } catch (error) {
+      setError(error.response?.data?.message || 'failed to add members')
+    }
+  }
+
+  const handleRemoveMember = async(teamId, memberId) => {
+    try {
+      await teamApi.removeMember(teamId, memberId)
+      fetchTeams()
+    } catch (error) {
+      setError(error.response?.data?.message || 'failed to remove member')
+    }
   }
 
 
@@ -146,8 +173,31 @@ function Teams() {
                   <button onClick={() => handleEditTeam(team)} className='bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition'>edit</button>
                   <button onClick={() => handleDelete(team._id)} className='bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition'>delete</button>
                 </div>
+
+                {/* team mebers  */}
+                <div className="mt-4">
+                  <h3 className='font-semibold'>Team Members</h3>
+                  {team.members && team.members.length > 0 ? (
+                    team.members.map((memberId) => (
+                      <div key={memberId} className="flex justify-between items-center bg-gray-100 px-3 py-2 rounded mt-2">
+                        <span>{memberId.name}</span>
+                        <button onClick={() => handleRemoveMember(team._id, memberId._id)} className='bg-red-400 text-white px-3 py-1 rounded hover:bg-red-600'>remove </button>
+                      </div>
+                    ))
+                  ) : (
+                    <p className='text-gray-500 mt-1'>no members</p>
+                  )}
+
+                  {/* add members form  */}
+                  <div className="flex gap-2 mt-3">
+                    <input type="text" value={addMemberTeamId === team._id ? newMemberId : ''} onChange={(e) =>{ setAddMemberTeamId(team._id), setNewMemberId(e.target.value)}} placeholder='enter member id' className='border border-gray-300 px-3 py-2 rounded w-full' />
+                    <button onClick={() => handleAddMember(team._id)} className='bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'>add</button>
+                  </div>
+                </div>
               </div>
           ))}
+
+
           
         </div>
     </div>
