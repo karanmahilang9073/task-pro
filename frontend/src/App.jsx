@@ -7,6 +7,7 @@ import { useContext } from 'react'
 import Navbar from './components/Navbar'
 import Teams from './pages/Teams'
 import Notification from './pages/Notification'
+import { ToastContainer } from "react-toastify";
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
 
   return (
     <>
+    <ToastContainer/>
       <Navbar />
       <Routes>
         <Route path='/' element={isLoggedin ? <Home/> : <Login/>} />

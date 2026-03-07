@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../context/authContext.jsx'
 import { taskApi } from '../api/api'
+import {toast} from 'react-toastify'
+import "react-toastify/dist/ReactToastify.css";
 
 function Home() {
     const [tasks, setTasks] = useState([])
@@ -51,8 +53,10 @@ function Home() {
             setFormdata({title : '', description : '', deadline : ''})
             setError(null)
             await fetchTask()
+            toast.success('task created successfully')
         } catch (error) {
-            setError(error.response?.data?.message || 'failed to create task, try again later')
+            setError(error.response?.data?.message || 'failed to create task')
+            toast.error('failed to create task')
         } finally {
             setLoading(false)
         }
@@ -64,9 +68,10 @@ function Home() {
             await taskApi.deleteTask(taskId)
             await fetchTask()
             setError(null)
-            console.log('task deleted successfully', taskId)
+            toast.success('task deleted successfully')
         } catch (error) {
             setError(error.response?.data?.message || 'failed to delete task')
+            toast.error('failed to delete task')
         }
     }
 
@@ -93,8 +98,10 @@ function Home() {
             setEditFormData({title : '', description : '', deadline : ''})
             await fetchTask()
             setEditTaskId(null)
+            toast.success('task updated successfully')
         } catch (error) {
             setError(error.response?.data?.message || 'failed to updated task')
+            toast.error('failed to update task')
         }
     }
 
