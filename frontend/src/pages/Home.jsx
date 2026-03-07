@@ -80,6 +80,11 @@ function Home() {
         })
     }
 
+    const formatDate = (dateString) => {
+        if(!dateString) return 'no deadline'
+        return new Date(dateString).toLocaleDateString('en-us', {year : 'numeric', month : 'short', day : 'numeric'})
+    }
+
     //update task
     const handleUpdateTask = async(e) => {
         try {
@@ -169,7 +174,7 @@ function Home() {
                             <p className="text-gray-600 text-sm mt-1">{task.description}</p>
                         </div>
                         <div className='mb-4'>
-                            <p className="text-gray-500 text-sm">Deadline: <span className='font-medium text-gray-700'>{task.deadline}</span></p>
+                            <p className="text-gray-500 text-sm">Deadline: <span className='font-medium text-gray-700'>{formatDate(task.deadline)}</span></p>
                             <p className="text-gray-500 text-sm">status: <span className="font-medium text-blue-600">{task.status}</span></p>
                         </div>
                         <div className="flex gap-2">
@@ -180,8 +185,6 @@ function Home() {
                 ))}
             </div>
         </div>
-        
-       
     </div>
   )
 }
