@@ -241,18 +241,23 @@ function Home() {
             <div className='grid gap-4'>
                 {filteredTask.map((task) => (
                     <div key={task._id} className='bg-white p-6 rounded-lg shadow hover:shadow-md transition'>
+
                         <div className='mb-3'>
                             <h2 className="font-semibold text-lg text-gray-800">{task.title}</h2>
                             <p className="text-gray-600 text-sm mt-1">{task.description}</p>
                         </div>
+
                         <div className='mb-4'>
                             <p className="text-gray-500 text-sm">Deadline: <span className='font-medium text-gray-700'>{formatDate(task.deadline)}</span></p>
                             <p className="text-gray-500 text-sm">status: <span className="font-medium text-blue-600">{task.status}</span></p>
+                            <p className="text-gray-500 text-sm">Assigned to: <span className='font-medium text-blue-600'>{task.assignedTo?.name || 'not assigned to anyone'}</span></p>
                         </div>
+
                         <div className="flex gap-2">
                             <button onClick={() => handleEditTask(task)} className='flex-1 bg-green-600 text-white font-medium py-2 rounded-lg hover:bg-green-700 transition'>edit</button>
                             <button onClick={() => deleteTask(task._id)} className='flex-1 bg-red-600 text-white font-medium py-2 rounded-lg hover:bg-red-700 transition'>delete task</button>
                         </div>
+
                     </div>
                 ))}
             </div>
