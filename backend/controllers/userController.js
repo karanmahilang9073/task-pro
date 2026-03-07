@@ -63,6 +63,16 @@ export const login = asynchandler(async(req, res, next) => {
     })
 })
 
+export const getAllUsers = asynchandler(async(req, res) => {
+    const users =  await User.find().select("-password")
+    if(!users || users.length == 0){
+        const error = new Error('user not found')
+        error.statusCode = 404
+        throw error
+    }
+    res.status(200).json({success : true, message : 'all user fetched successfully', count :  users.length, users : users})
+})
+
 export const getUser = asynchandler(async(req, res) => {
     const userId = req.userId
     const user = await User.findById(userId).select("-password")

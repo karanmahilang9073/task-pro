@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../context/authContext.jsx'
-import { taskApi } from '../api/api'
+import { authApi, taskApi } from '../api/api'
 import {toast} from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
 
@@ -9,12 +9,14 @@ function Home() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const [showForm, setShowForm] = useState(false)
+    const [users, setUSers] = useState([])
 
     //task states
     const [formdata, setFormdata] = useState({
         title : '',
         description : '',
-        deadline : ''
+        deadline : '',
+        assignedTo : '',
     })
     
     //edit task states
@@ -22,12 +24,29 @@ function Home() {
     const [editFormData, setEditFormData] = useState({
         title : '',
         description : '',
-        deadline : ''
+        deadline : '',
+        assignedTo : '',
     })
 
     const [selectedStatus, setSelectedStatus] = useState('all')
 
     const {isLoggedin , token} = useContext(AuthContext)
+
+    useEffect(() => {
+        const fetchUsers = async() => {
+            try {
+                setLoading(true)
+                const res = await authApi.getAllUsers()
+                setUSers(res.data.users)
+            } catch (error) {
+                setError(error.response?.data?.message || 'failed to fetch users')
+                toast.error('failed to fetch users')
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchUsers()
+    }, [])
 
     const fetchTask = async() => {
         try {
@@ -51,8 +70,8 @@ function Home() {
     const handleTask = async(e) => {
         e.preventDefault()
         try {
-            await taskApi.createTask(formdata.title, formdata.description, formdata.deadline)
-            setFormdata({title : '', description : '', deadline : ''})
+            await taskApi.createTask(formdata.title, formdata.description, formdata.deadline, formdata.assignedTo)
+            setFormdata({title : '', description : '', deadline : '', assignedTo : ''})
             setError(null)
             await fetchTask()
             toast.success('task created successfully')
@@ -96,8 +115,8 @@ function Home() {
     const handleUpdateTask = async(e) => {
         try {
             e.preventDefault()
-            await taskApi.updateTask(editFormData.title, editFormData.description, editFormData.deadline, null, editTaskId)
-            setEditFormData({title : '', description : '', deadline : ''})
+            await taskApi.updateTask(editFormData.title, editFormData.description, editFormData.deadline,editFormData.assignedTo, editTaskId)
+            setEditFormData({title : '', description : '', deadline : '', assignedTo : ''})
             await fetchTask()
             setEditTaskId(null)
             toast.success('task updated successfully')
@@ -133,22 +152,40 @@ function Home() {
         {showForm && (
         <form onSubmit={handleTask} className='bg-white p-6 rounded-lg shadow mb-6'>
             <h3 className='text-lg font-semibold mb-4'>create new task</h3>
+
             <div className='mb-4'>
                 <label className='block text-sm font-medium text-gray-700 mb-1'>title</label>
                 <input type="text" value={formdata.title} onChange={(e) => setFormdata({...formdata, title : e.target.value})} placeholder='enter task title' className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' />
             </div>
+
             <div className='mb-4'>
                 <label className='block text-sm font-medium text-gray-700 mb-1'>description</label>
                 <input type="text" value={formdata.description} onChange={(e) => setFormdata({...formdata, description : e.target.value})} placeholder='please enter task description' className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'  />
             </div>
+
             <div  className='mb-4'>
                 <label className='block text-sm font-medium text-gray-700 mb-1'>deadline</label>
                 <input type="date" value={formdata.deadline} onChange={(e) => setFormdata({...formdata, deadline : e.target.value})} placeholder='please set task deadline' className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' />
             </div>
+
+            <div className="mb-4">
+                <label className='block text-sm font-medium text-gray-700 mb-1'>Assign To</label>
+                <select value={formdata.assignedTo} onChange={(e) => setFormdata({...formdata, assignedTo : e.target.value})} className='w-full rounded-lg border border-gray-300 px-4 py-2'>
+                    <option value="">Select user</option>
+                    {users.map((user) => (
+                        <option value={user._id} key={user._id} >
+                            {user.name}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+
             <div className='flex gap-2'>
                 <button type='submit' className='flex-1 bg-blue-600 text-white font-medium py-2.5 rounded-lg hover:bg-blue-700 transition'>create task</button>
                 <button type='button' onClick={() => setShowForm(false)} className='flex-1 bg-gray-500 text-white font-medium py-2.5 rounded-lg hover:bg-gray-600 transition'>cancel</button>
             </div>
+
         </form>
         )}
 
@@ -168,6 +205,19 @@ function Home() {
                 <label className='block text-sm font-medium text-gray-700 mb-1'>deadline</label>
                 <input type="date" value={editFormData.deadline} onChange={(e) => setEditFormData({...editFormData, deadline : e.target.value})} placeholder='please set task deadline' className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' />
             </div>
+
+            <div className="mb-4">
+                <label className='block text-sm font-medium text-gray-700 mb-1'>Assign To</label>
+                <select value={editFormData.assignedTo} onChange={(e) => setEditFormData({...editFormData, assignedTo : e.target.value})} className='w-full rounded-lg border border-gray-300 px-4 py-2'>
+                    <option value="">Select user</option>
+                    {users.map((user) => (
+                        <option value={user._id} key={user._id} >
+                            {user.name}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
             <div className='flex gap-2'>
                 <button type='submit' className='flex-1 bg-blue-500 text-white font-medium py-2.5 rounded-lg hover:bg-blue-700 transition'>save task</button>
                 <button type='button' onClick={() => setEditTaskId(null)} className='flex-1 bg-gray-600 text-white font-medium py-2.5 rounded-lg hover:bg-gray-600 transition'>cancel</button>
