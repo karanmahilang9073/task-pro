@@ -25,6 +25,8 @@ function Home() {
         deadline : ''
     })
 
+    const [selectedStatus, setSelectedStatus] = useState('all')
+
     const {isLoggedin , token} = useContext(AuthContext)
 
     const fetchTask = async() => {
@@ -105,6 +107,9 @@ function Home() {
         }
     }
 
+    //filter tasks
+    const filteredTask = selectedStatus === "all" ? tasks : tasks.filter((task) => task.status === selectedStatus)
+
   return (
     <div className='min-h-screen bg-gray-300 p-6'>
 
@@ -170,11 +175,21 @@ function Home() {
         </form>
         }
 
+        {/* status section  */}
+        <div className="flex gap-2 flex-wrap mb-6">
+            <button className='bg-gray-400 text-white rounded px-3 py-2' onClick={()=> setSelectedStatus('all')}>all</button>
+            <button className='bg-yellow-400 text-white rounded px-3 py-2' onClick={()=> setSelectedStatus('pending')}>pending</button>
+            <button className='bg-orange-400 text-white rounded px-3 py-2' onClick={()=> setSelectedStatus('inprogress')}>in Progress</button>
+            <button className='bg-green-400 text-white rounded px-3 py-2' onClick={()=> setSelectedStatus('completed')}>completed</button>
+            <button className='bg-red-600 text-white rounded px-3 py-2' onClick={()=> setSelectedStatus('deadlineMissed')}>deadline-Missed</button>
+        </div>
+
+
         {/* task card  */}
         <div className='mt-8'>
             <h3 className="text-lg font-semibold mb-4 ">your tasks</h3>
             <div className='grid gap-4'>
-                {tasks.map((task) => (
+                {filteredTask.map((task) => (
                     <div key={task._id} className='bg-white p-6 rounded-lg shadow hover:shadow-md transition'>
                         <div className='mb-3'>
                             <h2 className="font-semibold text-lg text-gray-800">{task.title}</h2>
