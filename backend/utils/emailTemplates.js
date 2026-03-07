@@ -1,6 +1,5 @@
-
 export const taskAssignmentTemplate = (title, description, deadline) => {
-    return `
+  return `
     <html>
         <body>
             <div class="container">
@@ -27,11 +26,11 @@ export const taskAssignmentTemplate = (title, description, deadline) => {
                 </div>
             </div>
         </body>
-    </html>`
-}
+    </html>`;
+};
 
-export const deadlineReminderTemplate = (title,deadline,  daysLeft) => {
-    return `
+export const deadlineReminderTemplate = (title, deadline, daysLeft) => {
+  return `
     <html>
         <body>
             <div class="container">
@@ -57,5 +56,33 @@ export const deadlineReminderTemplate = (title,deadline,  daysLeft) => {
             </div>
         </div>
     </body>
-  </html>`
-}
+  </html>`;
+};
+
+export const taskCompletionTemplate = (title, description) => {
+  return `
+        <html>
+            <body>
+            <div class="container">
+            <div class="header">✅ task completed successfully</div>
+
+            <div class="task-box">
+                <div class="value">
+                <span class="label">Task Title:</span> ${title}
+                </div>
+
+                <div class="value">
+                <span class="label">description:</span> ${description}
+                </div>
+
+            </div>
+
+            <div class="footer">
+                congratulations 🎉<br/>
+                you have successfully completed your task. thanks for your efforts
+            </div>
+        </div>
+    </body>
+        </html>
+    `;
+};
