@@ -18,7 +18,6 @@ export const startDeadlineChecker = async() => {
             console.log('error while updating deadline', error)
         }
     }) 
-
     console.log('deadine checker started')  
 }
 

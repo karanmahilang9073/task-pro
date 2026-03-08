@@ -7,6 +7,8 @@ import userRouter from './routes/userRoutes.js'
 import taskRouter from './routes/taskRoutes.js'
 import teamRouter from './routes/teamRoutes.js'
 import notificationRouter from './routes/notificationRoutes.js'
+import { startDeadlineChecker } from './utils/deadlinechecker.js'
+
 
 const app = express()
 dotenv.config()
@@ -31,6 +33,9 @@ app.use('/api/notification', notificationRouter)
 
 //database call
 connectDB()
+
+//start deadline checker
+startDeadlineChecker()
 
 //global error hander
 app.use((err, req, res, next) => {
