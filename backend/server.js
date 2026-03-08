@@ -8,6 +8,7 @@ import taskRouter from './routes/taskRoutes.js'
 import teamRouter from './routes/teamRoutes.js'
 import notificationRouter from './routes/notificationRoutes.js'
 import { startDeadlineChecker } from './utils/deadlinechecker.js'
+import { deadlineReminder } from './utils/deadlineReminder.js'
 
 
 const app = express()
@@ -36,6 +37,9 @@ connectDB()
 
 //start deadline checker
 startDeadlineChecker()
+
+//deadline reminder
+deadlineReminder()
 
 //global error hander
 app.use((err, req, res, next) => {
