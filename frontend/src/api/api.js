@@ -29,7 +29,8 @@ const api = {
 export const authApi = {
     register : (name, email, password) => api.post('/auth/register', {name, email, password}),
     login : (email, password) => api.post('/auth/login', {email, password}),
-    getAllUsers : () => api.get('/auth/all')
+    getAllUsers : () => api.get('/auth/all'),
+    updateUser : (name, email, password) => api.put(`/auth/profile`, {name, email, password})
 }
 
 export const taskApi = {

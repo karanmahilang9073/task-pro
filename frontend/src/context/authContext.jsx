@@ -32,6 +32,11 @@ export const AuthProvider = ({children}) => {
         localStorage.setItem('token', userToken)
         localStorage.setItem('user', JSON.stringify(userData))
     }
+
+    const updateUser = (updatedUserData) => {
+        setUser(updatedUserData)
+        localStorage.setItem('user', JSON.stringify(updatedUserData))
+    }
     
     const logout = () => {
         setUser(null)
@@ -50,6 +55,7 @@ export const AuthProvider = ({children}) => {
             register,
             isLoggedin,
             login,
+            updateUser,
             logout,
         }}>
             {children}

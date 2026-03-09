@@ -16,7 +16,7 @@ function Navbar() {
 
   return (
     <div className=''>
-      <nav className='flex justify-between items-center bg-blue-600 text-white p-4 gap-4 hover:un'>
+      <nav className='flex justify-between items-center bg-blue-500 text-white p-4 gap-4 hover:un'>
         <div className='flex gap-4'>
           <h2>task-pro</h2>
         </div>
@@ -26,7 +26,7 @@ function Navbar() {
           <Link to='/notifications' className='hover:underline'>notifications</Link> 
         </div>
         <div className="flex gap-2">
-          <span>{user.name}</span>
+          <Link to='/profile' className=' bg-green-500 rounded-lg px-2 py-2 hover:bg-green-600'>{user.name}</Link>
           <button onClick={handleLogout} className='bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition'>logout</button>
         </div>
       </nav>
