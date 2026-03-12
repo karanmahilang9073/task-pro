@@ -3,6 +3,7 @@ import { AuthContext } from '../context/authContext'
 import { authApi } from '../api/api'
 import { toast } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
+import {useNavigate} from 'react-router-dom'
 
 function Profile() {
     const [isEditing, setIsEditing] = useState(false)
@@ -14,7 +15,9 @@ function Profile() {
         password : '',
     })
 
-    const {user, updateUser} = useContext(AuthContext)
+    const navigate = useNavigate()
+
+    const {user, updateUser, logout} = useContext(AuthContext)
 
     useEffect(() => {
         if(user){
@@ -53,11 +56,29 @@ function Profile() {
        return <div>Loading...</div>
     }
 
+    const handleDelete = async() => {
+        const confirmDelete = window.confirm("are u sure want to delete your account? this action cannnot be undone")
+        if(!confirmDelete) return true
+        
+        try {
+            setLoading(true)
+            setError(null)
+            await authApi.deleteUser()
+            toast.success('user deleted successfully')
+            logout()
+            navigate('/register')
+        } catch (error) {
+            setError(error.response?.data?.message || "failed to delete account")
+            toast.error('failed to delete user')
+        } finally {
+            setLoading(false)
+        }
+    }
+
 
     
   return (
     <div>
-
         
         {/* user details  */}
         {!isEditing && (
@@ -79,7 +100,10 @@ function Profile() {
                         <p className='text-lg font-medium text-gray-800 capitalize'>{user.role}</p>
                     </div>
                 </div>
-                <button onClick={handleEdit} className='mt-6 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition'>edit profile</button>
+                <div className="flex gap-2">
+                    <button onClick={handleEdit} className='mt-6 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition'>edit profile</button>
+                    <button onClick={handleDelete} className='bg-red-500 text-white rounded-lg mt-6 px-4 py-2 hover:bg-red-700 transition' disabled="loading">delete profile</button>
+                </div>
             </div>
         )}
 
