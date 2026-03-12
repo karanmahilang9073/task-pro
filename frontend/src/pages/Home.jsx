@@ -249,7 +249,7 @@ function Home() {
 
                         <div className='mb-4'>
                             <p className="text-gray-500 text-sm">Deadline: <span className='font-medium text-gray-700'>{formatDate(task.deadline)}</span></p>
-                            <p className="text-gray-500 text-sm">status: <span className={`font-medium ${task.status == 'completed' ? 'text-green-600' : task.status == 'deadlineMissed' ? 'text-red-600' : task.status == 'inProgress' ? 'text-yellow-600' : 'text-blue-600'}`}>{task.status}</span></p>
+                            <p className="text-gray-500 text-sm">status: <span className={`font-medium ${task.status == 'completed' ? 'text-green-600' : task.status == 'deadlineMissed' ? 'text-red-600' : task.status == 'inprogress' ? 'text-yellow-600' : 'text-blue-600'}`}>{task.status}</span></p>
                             <p className="text-gray-500 text-sm">Assigned to: <span className='font-medium text-blue-600'>{task.assignedTo?.name || 'not assigned to anyone'}</span></p>
                         </div>
 

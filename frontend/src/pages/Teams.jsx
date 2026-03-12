@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { AuthContext } from '../context/authContext'
 import { teamApi } from '../api/api'
+import { toast } from 'react-toastify'
 
 function Teams() {
 
@@ -90,10 +91,12 @@ function Teams() {
         return
       }
       await teamApi.addMembers(teamId, newMemberId)
+      toast.success('member added successfully')
       setNewMemberId('')
       fetchTeams()
     } catch (error) {
       setError(error.response?.data?.message || 'failed to add members')
+      toast.error('failed to add member')
     }
   }
 

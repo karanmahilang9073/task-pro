@@ -20,7 +20,12 @@ export const deadlineReminder = async() => {
                     const userEmail = task.assignedTo?.email
                     if(!userEmail) continue;
 
-                    await sendEmail(userEmail, 'task deadline reminder', deadlineReminderTemplate(task.title, task.deadline, diffInDays))
+                    try {
+                        await sendEmail(userEmail, 'task deadline reminder', deadlineReminderTemplate(task.title, task.deadline, diffInDays))
+                    } catch (emailError) {
+                        console.error('Failed to send deadline reminder email:', emailError.message)
+                        // Continue even if email fails
+                    }
 
                     await Notification.create({
                         recipient : task.assignedTo._id,
