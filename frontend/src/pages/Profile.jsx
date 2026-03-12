@@ -102,7 +102,7 @@ function Profile() {
                 </div>
                 <div className="flex gap-2">
                     <button onClick={handleEdit} className='mt-6 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition'>edit profile</button>
-                    <button onClick={handleDelete} className='bg-red-500 text-white rounded-lg mt-6 px-4 py-2 hover:bg-red-700 transition' disabled="loading">delete profile</button>
+                    <button onClick={handleDelete} className='bg-red-500 text-white rounded-lg mt-6 px-4 py-2 hover:bg-red-700 transition' disabled={loading}>delete account</button>
                 </div>
             </div>
         )}
