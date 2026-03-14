@@ -58,5 +58,4 @@ export const notificationApi = {
     deleteNotification : (notificationId) => api.delete(`/notification/${notificationId}`)
 }
 
-
 export default api

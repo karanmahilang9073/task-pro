@@ -153,21 +153,25 @@ function Home() {
         <form onSubmit={handleTask} className='bg-white p-6 rounded-lg shadow mb-6'>
             <h3 className='text-lg font-semibold mb-4'>create new task</h3>
 
+            {/* title  */}
             <div className='mb-4'>
                 <label className='block text-sm font-medium text-gray-700 mb-1'>title</label>
                 <input type="text" value={formdata.title} onChange={(e) => setFormdata({...formdata, title : e.target.value})} placeholder='enter task title' className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' />
             </div>
 
+            {/* description  */}
             <div className='mb-4'>
                 <label className='block text-sm font-medium text-gray-700 mb-1'>description</label>
                 <input type="text" value={formdata.description} onChange={(e) => setFormdata({...formdata, description : e.target.value})} placeholder='please enter task description' className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'  />
             </div>
 
+            {/* deadline  */}
             <div  className='mb-4'>
                 <label className='block text-sm font-medium text-gray-700 mb-1'>deadline</label>
                 <input type="date" value={formdata.deadline} onChange={(e) => setFormdata({...formdata, deadline : e.target.value})} placeholder='please set task deadline' className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' />
             </div>
 
+            {/* assigned to  */}
             <div className="mb-4">
                 <label className='block text-sm font-medium text-gray-700 mb-1'>Assign To</label>
                 <select value={formdata.assignedTo} onChange={(e) => setFormdata({...formdata, assignedTo : e.target.value})} className='w-full rounded-lg border border-gray-300 px-4 py-2'>
@@ -180,7 +184,7 @@ function Home() {
                 </select>
             </div>
 
-
+            {/* buttons  */}
             <div className='flex gap-2'>
                 <button type='submit' className='flex-1 bg-blue-600 text-white font-medium py-2.5 rounded-lg hover:bg-blue-700 transition'>create task</button>
                 <button type='button' onClick={() => setShowForm(false)} className='flex-1 bg-gray-500 text-white font-medium py-2.5 rounded-lg hover:bg-gray-600 transition'>cancel</button>
@@ -193,19 +197,26 @@ function Home() {
         {editTaskId !== null && 
             <form onSubmit={handleUpdateTask} className='bg-white p-6 rounded-lg shadow mb-6'>
                 <h3 className='text-lg font-semibold mb-4'>edit task</h3>
-            <div  className='mb-4'>
-                <label className='block text-sm font-medium text-gray-700 mb-1'>title</label>
-                <input type="text" value={editFormData.title} onChange={(e) => setEditFormData({...editFormData, title : e.target.value})} placeholder='enter task title' className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' />
-            </div>
-            <div  className='mb-4'>
-                <label className='block text-sm font-medium text-gray-700 mb-1'>description</label>
-                <input type="text" value={editFormData.description} onChange={(e) => setEditFormData({...editFormData, description : e.target.value})} placeholder='please enter task description' className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' />
-            </div>
-            <div  className='mb-4'>
-                <label className='block text-sm font-medium text-gray-700 mb-1'>deadline</label>
-                <input type="date" value={editFormData.deadline} onChange={(e) => setEditFormData({...editFormData, deadline : e.target.value})} placeholder='please set task deadline' className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' />
-            </div>
 
+                {/* edit title */}
+                <div  className='mb-4'>
+                    <label className='block text-sm font-medium text-gray-700 mb-1'>title</label>
+                    <input type="text" value={editFormData.title} onChange={(e) => setEditFormData({...editFormData, title : e.target.value})} placeholder='enter task title' className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' />
+                </div>
+
+                {/* edit descrption  */}
+                <div  className='mb-4'>
+                    <label className='block text-sm font-medium text-gray-700 mb-1'>description</label>
+                    <input type="text" value={editFormData.description} onChange={(e) => setEditFormData({...editFormData, description : e.target.value})} placeholder='please enter task description' className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' />
+                </div>
+
+                {/* edit deadline */}
+                <div  className='mb-4'>
+                    <label className='block text-sm font-medium text-gray-700 mb-1'>deadline</label>
+                    <input type="date" value={editFormData.deadline} onChange={(e) => setEditFormData({...editFormData, deadline : e.target.value})} placeholder='please set task deadline' className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' />
+                </div>
+
+            {/* edit assigned to*/}
             <div className="mb-4">
                 <label className='block text-sm font-medium text-gray-700 mb-1'>Assign To</label>
                 <select value={editFormData.assignedTo} onChange={(e) => setEditFormData({...editFormData, assignedTo : e.target.value})} className='w-full rounded-lg border border-gray-300 px-4 py-2'>
@@ -218,6 +229,7 @@ function Home() {
                 </select>
             </div>
 
+            {/* save edited task button  */}
             <div className='flex gap-2'>
                 <button type='submit' className='flex-1 bg-blue-500 text-white font-medium py-2.5 rounded-lg hover:bg-blue-700 transition'>save task</button>
                 <button type='button' onClick={() => setEditTaskId(null)} className='flex-1 bg-gray-600 text-white font-medium py-2.5 rounded-lg hover:bg-gray-600 transition'>cancel</button>
@@ -225,7 +237,7 @@ function Home() {
         </form>
         }
 
-        {/* status section  */}
+        {/* status section button  */}
         <div className="flex gap-2 flex-wrap mb-6">
             <button className='bg-gray-400 text-white rounded px-3 py-2' onClick={()=> setSelectedStatus('all')}>all</button>
             <button className='bg-yellow-400 text-white rounded px-3 py-2' onClick={()=> setSelectedStatus('pending')}>pending</button>
@@ -253,6 +265,7 @@ function Home() {
                             <p className="text-gray-500 text-sm">Assigned to: <span className='font-medium text-blue-600'>{task.assignedTo?.name || 'not assigned to anyone'}</span></p>
                         </div>
 
+                        {/* edit button  */}
                         <div className="flex gap-2">
                             <button onClick={() => handleEditTask(task)} className='flex-1 bg-green-600 text-white font-medium py-2 rounded-lg hover:bg-green-700 transition'>edit</button>
                             <button onClick={() => deleteTask(task._id)} className='flex-1 bg-red-600 text-white font-medium py-2 rounded-lg hover:bg-red-700 transition'>delete task</button>

@@ -109,11 +109,10 @@ function Teams() {
     }
   }
 
-
-
   return (
     <div>
       <h1 className='bg-gray-600 text-white text-center'>My teams</h1>
+
        {/* loading  */}
         {loading && <p className='bg-blue-50 border  border-blue-200 text-blue-600 text-sm rounded-lg px-3 py-2 mb-4'>fetching teams, please wait...</p>}
 
@@ -133,14 +132,20 @@ function Teams() {
         {showForm && (
           <form onSubmit={handleCreateTeam} className='mt-3 m-5  rounded-lg border border-gray-500 p-3'>
             <h2 className='text-2xl ml-3.5 '>create a team..</h2>
+
+            {/* team name */}
            <div className='flex flex-col'>
             <label className='w-full max-w-md rounded-md ' >team</label>
             <input type="text" value={formData.name} onChange={(e) => setFormdata({...formData, name : e.target.value})} placeholder='enter team name' className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' />
            </div>
+
+           {/* team desxription */}
            <div className='flex flex-col'>
             <label className='w-full max-w-md rounded-md ' >team</label>
             <input type="text" value={formData.description}  onChange={(e) => setFormdata({...formData, description : e.target.value})} placeholder='enter team description' className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' />
            </div>
+
+           {/* create team button */}
            <div className="flex mt-2">
             <button type='submit' className='bg-blue-500 text-white ml-1.5 rounded m-2'>create team</button>
             <button type='button' onClick={() => setShowForm(false)} className='bg-gray-500 text-white ml-1.5 rounded'>cancel</button>
@@ -151,14 +156,19 @@ function Teams() {
 
         {editTeamId !==  null && 
         <form onSubmit={handleUpdate}>
+          {/* edit team name */}
           <div className='flex flex-col'>
             <label className='w-full max-w-md rounded-md ' >team</label>
             <input type="text" value={editFormdata.name} onChange={(e) => setEditFormdata({...editFormdata, name : e.target.value})} placeholder='change team name' className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' />
            </div>
+
+           {/* edit team description */}
            <div className='flex flex-col'>
             <label className='w-full max-w-md rounded-md ' >team</label>
             <input type="text" value={editFormdata.description}  onChange={(e) => setEditFormdata({...editFormdata, description : e.target.value})} placeholder='change team description' className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' />
            </div>
+
+           {/* save button */}
            <div className="flex mt-2">
             <button type='submit' className='bg-blue-500 text-white ml-1.5 rounded m-2'>save</button>
             <button type='button' onClick={() => setEditTeamId(null)} className='bg-gray-500 text-white ml-1.5 rounded'>cancel</button>

@@ -40,6 +40,7 @@ function Notification() {
 
   return (
     <div className="bg-gray-100 p-6 ">
+            
             {loading && <p className='bg-blue-50 border  border-blue-200 text-blue-600 text-sm rounded-lg px-3 py-2 mb-4'>fetching notifications, please wait...</p>}
 
             {/* error */}

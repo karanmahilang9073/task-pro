@@ -25,7 +25,6 @@ function Register() {
 
         try {
             const res = await authApi.register(formdata.name, formdata.email, formdata.password)
-            console.log('API Response:', res.data)
             register(res.data.user, res.data.token)
             navigate('/')
             toast.success('user created succcessfully')
@@ -50,18 +49,25 @@ function Register() {
             {/* if something error  */}
             {error && <div className=' bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-2'>{error}</div> }
 
+            {/* name */}
             <div >
                 <label className='block text-sm font-medium text-gray-700 mb-1'>name</label>
                 <input onChange={(e) => setFormdata({...formdata, name : e.target.value})} type="text" className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition' placeholder='enter your name' />
             </div>
+
+            {/* email */}
             <div>
                 <label className='block text-sm font-medium text-gray-700 mb-1'>email</label>
                 <input onChange={(e) => setFormdata({...formdata, email : e.target.value})} type="text" className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition' placeholder='enter your email' />
             </div>
+
+            {/* password */}
             <div className='flex flex-col'>
                 <label className='block text-sm font-medium text-gray-700 mb-1'>password</label>
                 <input onChange={(e) => setFormdata({...formdata, password : e.target.value})} type="password" className='w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition' placeholder='enter your password' />
             </div>
+
+            {/* register button */}
             <button type='submit' className='w-full bg-blue-600 text-white font-medium py-2.5 rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center  gap-2' disabled={loading}>
                 {loading ? 'registering' : 'register'}
             </button>
@@ -71,8 +77,6 @@ function Register() {
                 <Link to='/login' className='text-blue-500 hover:underline font-medium'>login</Link>
             </p>
         </form>
-
-        
     </div>
   )
 }
