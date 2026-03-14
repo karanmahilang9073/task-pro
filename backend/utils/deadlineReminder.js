@@ -24,7 +24,6 @@ export const deadlineReminder = async() => {
                         await sendEmail(userEmail, 'task deadline reminder', deadlineReminderTemplate(task.title, task.deadline, diffInDays))
                     } catch (emailError) {
                         console.error('Failed to send deadline reminder email:', emailError.message)
-                        // Continue even if email fails
                     }
 
                     await Notification.create({
@@ -34,10 +33,7 @@ export const deadlineReminder = async() => {
                     reminderCount++;
                 }  
             }
-            console.log(`deadline remider sent: ${reminderCount}`)
         } catch (error) {
-            console.log('deadline reminder error', error)
         }
     })
-    console.log('deadline reminder service started')
 }

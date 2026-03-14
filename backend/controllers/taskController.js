@@ -34,7 +34,6 @@ export const createTask = asynchandler(async(req, res, next) => {
                 await sendEmail(user.email, 'new task assigned to you', emailHTML)
             } catch (emailError) {
                 console.error('Email notification failed:', emailError.message)
-                // Continue anyway - task is created even if email fails
             }
             await Notification.create({
                 recipient : user._id,
@@ -111,10 +110,9 @@ export const updateTask = asynchandler(async(req, res) => {
         if(user && user.email){
             const emailHTML = taskAssignmentTemplate(task.title, task.description, task.deadline)
             try {
-                await sendEmail(user.email, 'task updated', emailHTML)
+                await sendEmail(user.email, 'the given task assigned to u has been updated', emailHTML)
             } catch (emailError) {
                 console.error('Email notification failed:', emailError.message)
-                // Continue anyway - task is updated even if email fails
             }
             await Notification.create({
                 recipient : user._id,

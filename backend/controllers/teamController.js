@@ -1,7 +1,6 @@
 import { asynchandler } from "../middleware/asynchandler.js";
 import Team from "../models/Team.js";
 
-
 export const createTeam = asynchandler(async(req, res) => {
     const userId = req.userId
     const {name, description} = req.body 

@@ -1,7 +1,6 @@
 import { asynchandler } from "../middleware/asynchandler.js";
 import Notification from "../models/Notification.js";
 
-
 export const createNotification = asynchandler(async(req, res) => {
     const {recipient, type, taskId, message} = req.body
     if(!recipient || !type || !taskId || !message) {

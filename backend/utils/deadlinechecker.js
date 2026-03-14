@@ -13,11 +13,8 @@ export const startDeadlineChecker = async() => {
                 $set : {status : 'deadlineMissed'}
             }
         )
-        console.log(`updated ${res.modifiedCount} tasks`)
         } catch (error) {
-            console.log('error while updating deadline', error)
         }
     }) 
-    console.log('deadine checker started')  
 }
 
