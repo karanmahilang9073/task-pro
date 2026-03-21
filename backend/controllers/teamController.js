@@ -17,16 +17,14 @@ export const createTeam = asynchandler(async(req, res) => {
     })
 
     await newTeam.save()
-    res.status(200).json({success : true, message : 'new team created successfully', newTeam})
+    res.status(201).json({success : true, message : 'new team created successfully', newTeam})
 })
 
 export const getAllTeams = asynchandler(async(req, res) => {
     const userId = req.userId
     const team = await Team.find({createdBy : userId}).populate('members')
-    if(!team || team.length == 0){
-        const error = new Error('team not found')
-        error.statusCode = 404
-        throw error
+    if(team.length == 0){
+        return res.status(200).json({success : true, count : 0, team : []})
     }
 
     res.status(200).json({success : true, count : team.length, teams : team})
@@ -67,7 +65,7 @@ export const updateTeam = asynchandler(async(req, res) => {
         error.statusCode = 403
         throw error
     }
-    if(name) team.name = name
+    if(name) team.name = name.trim()
     if(description) team.description = description
 
     await team.save()
@@ -112,7 +110,7 @@ export const addMember = asynchandler(async(req, res) => {
         error.statusCode = 403
         throw error
     }
-    if(team.members.includes(memberId)){
+    if(team.members.some(m => m.toString() === memberId)){
         const error = new Error('member already exists in the team')
         error.statusCode = 400
         throw error
@@ -141,7 +139,7 @@ export const removeMember = asynchandler(async(req, res) => {
         error.statusCode = 403
         throw error
     }
-    if(!team.members.includes(memberId)){
+    if(!team.members.some(m => m.toString() === memberId)){
         const error = new Error('member not found in the team')
         error.statusCode = 400
         throw error
