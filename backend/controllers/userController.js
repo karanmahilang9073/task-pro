@@ -13,14 +13,12 @@ export const register = asynchandler(async (req, res, next) => {
 
     const existeduser = await User.findOne({email})
     if(existeduser){
-        const error = new Error('user aleady existed')
+        const error = new Error('aleady exists')
         error.statusCode = 409
         throw error
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10)
-
-    const user = await User.create({name, email, password : hashedPassword})
+    const user = await User.create({name, email, password})
 
     const token = JWT.sign(
         {id : user._id},
@@ -28,7 +26,7 @@ export const register = asynchandler(async (req, res, next) => {
         {expiresIn : '10d'}
     )
 
-    res.status(200).json({success : true, token,  message : 'user created successfully', 
+    res.status(201).json({success : true, token,  message : 'user created successfully', 
         user : {
             id : user._id,
             name : user.name,
@@ -45,7 +43,7 @@ export const login = asynchandler(async(req, res, next) => {
         throw error
     }
 
-    const user = await  User.findOne({email})
+    const user = await  User.findOne({email}).select("+password")
     if(!user){
         const error = new Error('invalid email or password')
         error.statusCode = 401
@@ -54,7 +52,7 @@ export const login = asynchandler(async(req, res, next) => {
 
     const isMatch = await bcrypt.compare(password, user.password)
     if(!isMatch){
-        const error = new Error('password do not match')
+        const error = new Error('invalid email or password')
         error.statusCode = 401
         throw error
     }
@@ -107,9 +105,8 @@ export const updateUser = asynchandler(async(req, res)=> {
     }
     if(name) user.name = name
     if(email) user.email = email
-    if(password){
-        user.password = await bcrypt.hash(password, 10)
-    }
+    if(password) user.password = password
+
     await user.save()
 
     res.status(200).json({success : true, message : 'user updated successfully', 
