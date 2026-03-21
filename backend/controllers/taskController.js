@@ -43,7 +43,6 @@ export const createTask = asynchandler(async(req, res, next) => {
             })
         }
     }
-    
     res.status(201).json({success : true, message : 'task created successfully', task})
 })
 
@@ -56,10 +55,8 @@ export const getAllTasks = asynchandler(async(req, res, next) => {
         ]
     }).populate("assignedTo", "name email")
 
-    if(!tasks){
-        const error = new Error('task not found')
-        error.statusCode = 404
-        throw error
+    if(tasks.length === 0){
+        res.status(200).json({success : true, count : 0, tasks : []})
     }
 
     res.status(200).json({success : true, message : 'all task fetched successfully', count : tasks.length, tasks})
@@ -67,14 +64,15 @@ export const getAllTasks = asynchandler(async(req, res, next) => {
 
 export const getTask = asynchandler(async(req, res) => {
     const taskId = req.params.id
-    const task = await Task.findById(taskId)
+    const userId = req.userId
+    const task = await Task.findById(taskId).populate("assignedTo", "name email")
     if(!task){
         const error = new Error('task not found')
         error.statusCode = 404
         throw error
     }
-    if(task.createdBy.toString() !== req.userId){
-        const error = new Error('unAuthorized error')
+    if(task.createdBy.toString() !== userId && task.assignedTo?.toString() !== userId){
+        const error = new Error('unAuthorized')
         error.statusCode = 403
         throw error
     }
@@ -93,12 +91,12 @@ export const updateTask = asynchandler(async(req, res) => {
         throw error
     }
     if(task.createdBy.toString() !== userId){
-        const error = new Error('unAuthprized')
+        const error = new Error('unAuthorized')
         error.statusCode = 403
         throw error
     }
     
-    if(title !== undefined) task.title = title
+    if(title !== undefined) task.title = title.trim()
     if(description !== undefined) task.description = description
     if(deadline !== undefined) task.deadline = deadline
     if(assignedTo !== undefined) task.assignedTo = assignedTo
