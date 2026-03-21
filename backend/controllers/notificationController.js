@@ -5,21 +5,19 @@ export const createNotification = asynchandler(async(req, res) => {
     const {recipient, type, taskId, message} = req.body
     if(!recipient || !type || !taskId || !message) {
         const error = new Error('all fields are required')
-        error.statusCode = 404
+        error.statusCode = 400
         throw error
     } 
     const notification = new Notification({recipient, type, taskId, message})
     await notification.save()
-    res.status(200).json({success : true, message : 'notification created successfully', notification})
+    res.status(201).json({success : true, message : 'notification created successfully', notification})
 })
 
 export const getAllNotifications = asynchandler(async(req, res) => {
     const userId = req.userId;
-    const notifications = await Notification.find({recipient : userId})
-    if(!notifications || notifications.length === 0){
-        const error = new Error('no notifications fount')
-        error.statusCode = 404
-        throw error
+    const notifications = await Notification.find({recipient : userId}).sort({createdAt : -1})
+    if(notifications.length === 0){
+        res.status(200).json({success : true, count : 0, notifications : []})
     }
     res.status(200).json({success : true, count : notifications.length, notifications : notifications})
 })
