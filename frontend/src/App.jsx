@@ -26,9 +26,14 @@ function App() {
         <Route path='/register' element={<Register/>} />
         <Route path='/login' element={<Login/>} />
 
-        <Route path='/teams' element={isLoggedin ? <Teams/> : <Navigate to='/login' />} />
-        <Route path='/notifications' element={isLoggedin ? <Notification/> : <Navigate to='/login' />} />
-        <Route path='/profile' element={isLoggedin ? <Profile/> : <Navigate to='/login' />} />
+        {isLoggedin && (
+          <>
+            <Route path='/teams' element={<Teams/>} />
+            <Route path='/notifications' element={<Notification/>} />
+            <Route path='/profile' element={<Profile/>} />
+          </>
+        )}
+
       </Routes>
     </>
   )
