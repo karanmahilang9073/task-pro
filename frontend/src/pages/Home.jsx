@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../context/authContext.jsx'
 import { authApi, taskApi } from '../api/api'
 import {toast} from 'react-toastify'
@@ -9,7 +9,7 @@ function Home() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const [showForm, setShowForm] = useState(false)
-    const [users, setUSers] = useState([])
+    const [users, setUsers] = useState([])
 
     //task states
     const [formdata, setFormdata] = useState({
@@ -30,14 +30,14 @@ function Home() {
 
     const [selectedStatus, setSelectedStatus] = useState('all')
 
-    const {isLoggedin , token} = useContext(AuthContext)
+    const {isLoggedin} = useContext(AuthContext)
 
     useEffect(() => {
         const fetchUsers = async() => {
             try {
                 setLoading(true)
                 const res = await authApi.getAllUsers()
-                setUSers(res.data.users)
+                setUsers(res.data.users)
             } catch (error) {
                 setError(error.response?.data?.message || 'failed to fetch users')
                 toast.error('failed to fetch users')
@@ -48,23 +48,24 @@ function Home() {
         fetchUsers()
     }, [])
 
-    const fetchTask = async() => {
+
+    const fetchTask = useCallback(async() => {
         try {
             setLoading(true)
-            const data = await taskApi.getAllTasks()
-            setTasks(data.data.tasks)
+            const res = await taskApi.getAllTasks()
+            setTasks(res.data.tasks)
         } catch (error) {
-            setError(error.response?.data?.message || 'failed to fetch task')
-        }finally {
+            setError(error.response?.data?.message || 'failed to fetch tasks')
+        } finally {
             setLoading(false)
         }
-    }
+    }, [])
 
     useEffect(() => {
         if(isLoggedin){
             fetchTask()
         }
-    }, [isLoggedin, token])
+    }, [isLoggedin, fetchTask])
 
     // create task
     const handleTask = async(e) => {
@@ -133,13 +134,13 @@ function Home() {
     <div className='min-h-screen bg-gray-300 p-6'>
 
         {/* loading  */}
-        {loading && <p className='bg-blue-50 border  border-blue-200 text-blue-600 text-sm rounded-lg px-3 py-2 mb-4'>loading</p>}
+        {loading && tasks.length === 0 && <p className='bg-blue-50 border  border-blue-200 text-blue-600 text-sm rounded-lg px-3 py-2 mb-4'>loading</p>}
 
         {/* error */}
         {error && <p className='bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3 mb-4'>{error}</p>}
 
         {/* task list  */}
-        {!loading && tasks.length == 0 && (
+        {!loading && tasks.length === 0 && (
             <p className="text-gray-500">no task available</p>
         )}
 

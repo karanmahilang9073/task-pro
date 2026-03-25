@@ -9,7 +9,6 @@ import Teams from './pages/Teams'
 import Notification from './pages/Notification'
 import { ToastContainer } from "react-toastify";
 import Profile from './pages/Profile'
-import { Navigate } from 'react-router-dom'
 
 
 function App() {
